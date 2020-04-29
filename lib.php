@@ -205,8 +205,8 @@ class enrol_zarinpal_plugin extends enrol_plugin {
 
             // Calculate localised and "." cost, make sure we send zarinpal the same value,
             // please note zarinpal expects amount with 2 decimal places and "." separator.
-            $localisedcost = format_float($cost, 2, true);
-            $cost = format_float($cost, 2, false);
+            $localisedcost = format_float($cost, 0, true);
+            $cost = format_float($cost, 0, false);
 
             if (isguestuser()) { // force login only for guest user, not real users with guest role
                 if (empty($CFG->loginhttps)) {
