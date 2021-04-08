@@ -17,8 +17,8 @@
 /**
  * zarinpal enrolment plugin - support for user self unenrolment.
  * @package    enrol_zarinpal
- * @copyright  2018 SaeedSajadi<saeed.sajadi@gmail.com>
- * @author     Saeed Sajadi
+ * @copyright  2021 Zarinpal_Develop_Team<armin.z@zarinpal.com>
+ * @author     Zarinpal Develop Team
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

@@ -17,13 +17,13 @@
  *
  * @package    enrol
  * @subpackage zarinpal
- * @copyright  2018 SaeedSajadi <saeed.sajadi@gmail.com>
+ * @copyright  2021 Zarinpal Develop Team 
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once("lib.php");
-require_once($CFG->libdir . '/eventslib.php');
+// require_once($CFG->libdir . '/eventslib.php'); // doesn't work on the lastest version of moodle
 require_once($CFG->libdir . '/enrollib.php');
 require_once($CFG->libdir . '/filelib.php');
 global $CFG, $_SESSION, $USER, $DB, $OUTPUT;
@@ -37,29 +37,33 @@ $MerchantID = $plugininstance->get_config('merchant_id');
 $testing = $plugininstance->get_config('checkproductionmode');
 $Price = $_SESSION['totalcost'];
 $Authority = $_GET['Authority'];
-
 $data = new stdClass();
 $plugin = enrol_get_plugin('zarinpal');
 $today = date('Y-m-d');
 if ($_GET['Status'] == 'OK') {
 
-    if ($testing == 0)
-        $client = new SoapClient('https://sandbox.zarinpal.com/pg/services/WebGate/wsdl', ['encoding' => 'UTF-8']);
-    else
-        $client = new SoapClient('https://www.zarinpal.com/pg/services/WebGate/wsdl', ['encoding' => 'UTF-8']);
+    $param = array("merchant_id" => $MerchantID, "authority" => $Authority, "amount" => $Price * 10);
+    $jsonData = json_encode($param);
+    $ch = curl_init('https://api.zarinpal.com/pg/v4/payment/verify.json');
+    curl_setopt($ch, CURLOPT_USERAGENT, 'ZarinPal Rest Api v4');
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($jsonData)
+    ));
 
-    $res = $client->PaymentVerification(
-        [
-            'MerchantID' => $MerchantID,
-            'Authority'  => $Authority,
-            'Amount'     => ($Price / 10),
-        ]
-    );
+    $result = curl_exec($ch);
+    $err = curl_error($ch);
+    curl_close($ch);
+    $result = json_decode($result, true);
 
-    $Refnumber = $res->RefID; //Transaction number
-    $Resnumber = $res->RefID;//Your Order ID
-    $Status = $res->Status;
-    $PayPrice = ($Price / 10);
+
+    $Refnumber = $result['data']['ref_id']; //Transaction number
+    $Resnumber = $result['data']['ref_id'];//Your Order ID
+    $Status = $result['data']['code'];
+    $PayPrice = ($Price * 10);
     if ($Status == 100) { // Do business logic here for enrolment
         $coursename = $DB->get_field('course', 'fullname', ['id' => $_SESSION['courseid']]);
         $data->userid = $_SESSION['userid'];
@@ -138,9 +142,8 @@ if ($_GET['Status'] == 'OK') {
         $mailadmins   = $plugin->get_config('mailadmins');
         $shortname = format_string($course->shortname, true, array('context' => $context));
 
-
+        $a = new stdClass();
         if (!empty($mailstudents)) {
-            $a = new stdClass();
             $a->coursename = format_string($course->fullname, true, array('context' => $coursecontext));
             $a->profileurl = "$CFG->wwwroot/user/view.php?id=$user->id";
 

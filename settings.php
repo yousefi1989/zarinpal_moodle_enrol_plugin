@@ -32,11 +32,11 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('enrol_zarinpal/merchant_id',
                    get_string('merchant_id', 'enrol_zarinpal'),
                    'Copy API Login ID from merchant account & paste here', '', PARAM_RAW));;
-    $settings->add(new admin_setting_configcheckbox('enrol_zarinpal/checkproductionmode',
-                   get_string('checkproductionmode', 'enrol_zarinpal'), '', 0));
+    // $settings->add(new admin_setting_configcheckbox('enrol_zarinpal/checkproductionmode',
+    //               get_string('checkproductionmode', 'enrol_zarinpal'), '', 0));
 
-    $settings->add(new admin_setting_configcheckbox('enrol_zarinpal/usezaringate',
-                   get_string('usezaringate', 'enrol_zarinpal'), get_string('usezaringate_description', 'enrol_zarinpal'), 0));
+    // $settings->add(new admin_setting_configcheckbox('enrol_zarinpal/usezaringate',
+    //               get_string('usezaringate', 'enrol_zarinpal'), get_string('usezaringate_description', 'enrol_zarinpal'), 0));
 
     $settings->add(new admin_setting_configcheckbox('enrol_zarinpal/mailstudents', get_string('mailstudents', 'enrol_zarinpal'), '', 0));
 
