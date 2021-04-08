@@ -17,7 +17,7 @@
 /**
  * zarinpal utility script
  * @package    enrol_zarinpal
- * @copyright  2021 SaeedSajadi<saeed.sajadi@gmail.com>
+ * @copyright  2018 SaeedSajadi<saeed.sajadi@gmail.com>
  * @author     Saeed Sajadi & Armin Zahedi
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -77,29 +77,17 @@ $err = curl_error($ch);
 $result = json_decode($result, true, JSON_PRETTY_PRINT);
 curl_close($ch);
 
-//if ($testing == 0)
-//
-//    $client = new SoapClient('https://sandbox.zarinpal.com/pg/services/WebGate/wsdl', ['encoding' => 'UTF-8']);
-//else
-//    $client = new SoapClient('https://www.zarinpal.com/pg/services/WebGate/wsdl', ['encoding' => 'UTF-8']);
-//$data_arrray = [
-//    'MerchantID'  => $MerchantID,
-//    'Amount'      => ($Price / 10),
-//    'Description' => $Description,
-//    'Email'       => $Email,
-//    'Mobile'      => $Mobile,
-//    'CallbackURL' => $ReturnPath,
-//];
-//print_r($_POST);
-//print_r($data_arrray);
-//die();
-//$res = $client->PaymentRequest($data_arrray);
-
-header('Location: https://www.zarinpal.com/pg/StartPay/' . $result['data']["authority"]);
-
 //Redirect to URL You can do it also by creating a form
 if ($result['data']['code'] == 100) {
-    header('Location: https://www.zarinpal.com/pg/StartPay/' . $result['data']["authority"]);
+    echo' <html><body>
+                    <script type="text/javascript" src="https://cdn.zarinpal.com/zarinak/v1/checkout.js"></script>
+                    <script type="text/javascript">
+                    window.onload = function () {
+                    Zarinak.setAuthority("' . $result['data']['authority'] . '");
+                    Zarinak.showQR();
+                    Zarinak.open();
+         };
+            </script></body></html>';
 
 } else {
     echo'ERR: '.$result['errors']['code'];
